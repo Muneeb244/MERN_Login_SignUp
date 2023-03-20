@@ -1,4 +1,13 @@
-import { StyleSheet, Text, View, Image, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView,
+  Pressable
+} from "react-native";
 import React from "react";
 
 import welcomeLogo from "../../assets/welcomeLogo.png";
@@ -6,7 +15,7 @@ import Buttons from "../components/Buttons";
 
 import form from "../styles/form";
 
-const Welcome = () => {
+const Signup = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -14,7 +23,9 @@ const Welcome = () => {
           <Text style={form.header}>Create a new Account</Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={form.subHeader}>Already Registered? </Text>
-            <Text style={form.sideText}>Login here</Text>
+            <Pressable onPress={() => navigation.navigate('Login')}>
+              <Text style={form.sideText}>Login here</Text>
+            </Pressable>
           </View>
           <View style={form.mainC}>
             <Text style={[form.subHeader, { fontSize: 15 }]}>Name</Text>
@@ -28,14 +39,22 @@ const Welcome = () => {
 
           <View style={form.mainC}>
             <Text style={[form.subHeader, { fontSize: 15 }]}>Password</Text>
-            <TextInput style={form.input} placeholder="password" secureTextEntry />
+            <TextInput
+              style={form.input}
+              placeholder="password"
+              secureTextEntry
+            />
           </View>
 
           <View style={form.mainC}>
             <Text style={[form.subHeader, { fontSize: 15 }]}>
               Confirm Password
             </Text>
-            <TextInput style={form.input} placeholder="confirm your passwprd" secureTextEntry />
+            <TextInput
+              style={form.input}
+              placeholder="confirm your passwprd"
+              secureTextEntry
+            />
           </View>
 
           <View style={form.mainC}>
@@ -45,23 +64,25 @@ const Welcome = () => {
               placeholder="address"
             />
 
-            <View style={{ width: "100%", padding: 10, alignItems: "flex-end" }}>
+            <View
+              style={{ width: "100%", padding: 10, alignItems: "flex-end" }}
+            >
               <Text style={form.sideText}>Forgot password?</Text>
             </View>
 
-            <Buttons title="Login" onPress={() => console.log("Clicked")} />
+            <Buttons
+              title="Login"
+              height="20%"
+              onPress={() => console.log("Clicked")}
+            />
           </View>
         </View>
-
-        {/* <View style={form.mainC}>
-            
-        </View> */}
       </View>
     </View>
   );
 };
 
-export default Welcome;
+export default Signup;
 
 const styles = StyleSheet.create({
   container: {
@@ -81,7 +102,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     backgroundColor: "#fff",
     width: "100%",
-    height: "90%",
+    height: "95%",
     alignItems: "center",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

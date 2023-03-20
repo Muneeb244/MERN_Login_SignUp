@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput } from "react-native";
+import { StyleSheet, Text, View, Image, TextInput, Pressable } from "react-native";
 import React from "react";
 
 import welcomeLogo from "../../assets/welcomeLogo.png";
@@ -6,7 +6,7 @@ import Buttons from "../components/Buttons";
 
 import form from "../styles/form";
 
-const Welcome = () => {
+const Signin = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -15,20 +15,12 @@ const Welcome = () => {
           <Text style={form.header}>Login</Text>
           <Text style={form.subHeader}>Signin to continue</Text>
           <View style={form.mainC}>
-            <Text
-              style={[form.subHeader, { fontSize: 15, marginVertical: 10 }]}
-            >
-              Email
-            </Text>
+            <Text style={[form.subHeader, { fontSize: 15 }]}>Email</Text>
             <TextInput style={form.input} placeholder="email" />
           </View>
 
           <View style={form.mainC}>
-            <Text
-              style={[form.subHeader, { fontSize: 15, marginVertical: 10 }]}
-            >
-              Password
-            </Text>
+            <Text style={[form.subHeader, { fontSize: 15 }]}>Password</Text>
             <TextInput
               style={form.input}
               placeholder="Password"
@@ -39,7 +31,17 @@ const Welcome = () => {
             >
               <Text style={form.sideText}>Forgot password?</Text>
             </View>
-              <Buttons title="Login" onPress={() => console.log("Clicked")} />
+            <Buttons
+              title="Login"
+              height="22%"
+              onPress={() => console.log("Clicked")}
+            />
+            <View style={{flexDirection: 'row', marginTop: 5}}>
+              <Text style={form.subHeader}>Don't have an account? </Text>
+              <Pressable onPress={() => navigation.navigate('SignUp')}>
+                <Text style={form.sideText}>Create a new account</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </View>
@@ -47,7 +49,7 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default Signin;
 
 const styles = StyleSheet.create({
   container: {
@@ -64,14 +66,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   image: {
-    position: 'absolute',
+    position: "absolute",
     top: 75,
     width: 150,
     height: 150,
     borderRadius: 100,
   },
   login: {
-    paddingTop: 12,
+    paddingTop: 7,
     backgroundColor: "#fff",
     width: "100%",
     height: "55%",

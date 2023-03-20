@@ -4,14 +4,14 @@ import React from "react";
 import welcomeLogo from "../../assets/welcomeLogo.png";
 import Buttons from "../components/Buttons";
 
-const Welcome = () => {
+const Welcome = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
         <Image style={styles.image} source={welcomeLogo} />
         <View style={styles.buttongrp}>
-          <Buttons title="Login" />
-          <Buttons title="Sign up" />
+          <Buttons title="Login" height='25%' onPress={() => navigation.navigate('Login')}/>
+          <Buttons title="Sign up" height='25%' onPress={() => navigation.navigate('SignUp')} />
         </View>
       </View>
     </View>
