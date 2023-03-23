@@ -40,7 +40,6 @@ router.post('/signin', (req, res) => {
     const { error } = validateSignin(req.body);
     if (error) return res.send(error.details[0].message);
     res.send("working")
-
 });
 
 module.exports = router;
