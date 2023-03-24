@@ -1,51 +1,108 @@
-import { StyleSheet, Text, View, Image, TextInput, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  Pressable,
+} from "react-native";
 import React from "react";
 
 import welcomeLogo from "../../assets/welcomeLogo.png";
 import Buttons from "../components/Buttons";
 
 import form from "../styles/form";
+import { Formik } from "formik";
+import * as yup from "yup";
+import ErrorMessage from "../components/ErrorMessage";
 
-const Signin = ({navigation}) => {
+const signinSchema = yup.object({
+  email: yup.string().required().email().label("email"),
+  password: yup.string().required().min(6).label("password"),
+});
+
+const Signin = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.subContainer}>
-        <Image style={styles.image} source={welcomeLogo} />
-        <View style={styles.login}>
-          <Text style={form.header}>Login</Text>
-          <Text style={form.subHeader}>Signin to continue</Text>
-          <View style={form.mainC}>
-            <Text style={[form.subHeader, { fontSize: 15 }]}>Email</Text>
-            <TextInput style={form.input} placeholder="email" />
-          </View>
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      onSubmit={(values) => console.log(values)}
+      validationSchema={signinSchema}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <>
+          {
+            <View style={styles.container}>
+              <View style={styles.subContainer}>
+                <Image style={styles.image} source={welcomeLogo} />
+                <View style={styles.login}>
+                  <Text style={form.header}>Login</Text>
+                  <Text style={form.subHeader}>Signin to continue</Text>
+                  <View style={form.mainC}>
+                    <Text style={[form.subHeader, { fontSize: 15 }]}>
+                      Email
+                    </Text>
+                    <TextInput
+                    name="email"
+                      style={form.input}
+                      placeholder="email"
+                      onChangeText={handleChange("email")}
+                      value={values.email}
+                      onBlur={handleBlur("email")}
+                    />
+                    <ErrorMessage error={errors["email"]} visible={touched["email"]} />
+                  </View>
 
-          <View style={form.mainC}>
-            <Text style={[form.subHeader, { fontSize: 15 }]}>Password</Text>
-            <TextInput
-              style={form.input}
-              placeholder="Password"
-              secureTextEntry
-            />
-            <View
-              style={{ width: "100%", padding: 10, alignItems: "flex-end" }}
-            >
-              <Text style={form.sideText}>Forgot password?</Text>
+                  <View style={form.mainC}>
+                    <Text style={[form.subHeader, { fontSize: 15 }]}>
+                      Password
+                    </Text>
+                    <TextInput
+                    name="password"
+                      style={form.input}
+                      placeholder="Password"
+                      secureTextEntry
+                      onChangeText={handleChange("password")}
+                      value={values.password}
+                      onBlur={handleBlur("password")}
+                    />
+                    <ErrorMessage error={errors["password"]} visible={touched["password"]} />
+                    <View
+                      style={{
+                        width: "100%",
+                        padding: 10,
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Text style={form.sideText}>Forgot password?</Text>
+                    </View>
+                    <Buttons
+                      title="Login"
+                      height="22%"
+                      onPress={handleSubmit}
+                    />
+                    <View style={{ flexDirection: "row", marginTop: 5 }}>
+                      <Text style={form.subHeader}>
+                        Don't have an account?{" "}
+                      </Text>
+                      <Pressable onPress={() => navigation.navigate("SignUp")}>
+                        <Text style={form.sideText}>Create a new account</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+              </View>
             </View>
-            <Buttons
-              title="Login"
-              height="22%"
-              onPress={() => console.log("Clicked")}
-            />
-            <View style={{flexDirection: 'row', marginTop: 5}}>
-              <Text style={form.subHeader}>Don't have an account? </Text>
-              <Pressable onPress={() => navigation.navigate('SignUp')}>
-                <Text style={form.sideText}>Create a new account</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
+          }
+        </>
+      )}
+    </Formik>
   );
 };
 

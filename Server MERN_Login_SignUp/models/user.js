@@ -24,9 +24,11 @@ const userScheme = new mongoose.Schema({
         minlength: 5,
         maxlength: 1024
     },
-    dob: {
+    address: {
         type: String,
-        required: true
+        required: true,
+        minlength: 15,
+        maxlength: 255
     }
 });
 
@@ -41,8 +43,8 @@ const validateSignup = (user) => {
     const Schema = joi.object({
         name: joi.string().min(3).max(255).required(),
         email: joi.string().min(5).max(255).required().email(),
-        password: joi.string().min(5).max(255).required(),
-        dob: joi.string().required(),
+        password: joi.string().min(6).max(255).required(),
+        address: joi.string().required(),
     })
     return Schema.validate(user);
 }
@@ -50,7 +52,7 @@ const validateSignup = (user) => {
 const validateSignin = (user) => {
     const Schema = joi.object({
         email: joi.string().min(5).max(255).required().email(),
-        password: joi.string().min(5).max(255).required(),
+        password: joi.string().min(6).max(255).required(),
     })
     return Schema.validate(user);
 }
