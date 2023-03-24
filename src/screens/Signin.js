@@ -16,16 +16,23 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import ErrorMessage from "../components/ErrorMessage";
 
+
+const sendToBackend = (values, {resetForm}) => {
+  console.log(values);
+  resetForm();
+}
+
 const signinSchema = yup.object({
   email: yup.string().required().email().label("email"),
   password: yup.string().required().min(6).label("password"),
 });
 
+
 const Signin = ({ navigation }) => {
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={sendToBackend}
       validationSchema={signinSchema}
     >
       {({

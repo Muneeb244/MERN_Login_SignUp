@@ -1,11 +1,12 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 const WelcomeButtons = ({title, onPress, height}) => {
   return (
-    <Pressable style={[styles.container, {height: height}]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, {height: height}]} onPress={onPress}>
       <Text style={styles.title}>{title}</Text>
-    </Pressable>
+    </TouchableOpacity>
   )
 }
 
