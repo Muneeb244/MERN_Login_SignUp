@@ -9,9 +9,8 @@ const bcrypt = require("bcrypt");
 //middleware
 const auth = require("../middlewares/AuthToken");
 
-router.get("/", async (req, res) => {
-  // res.send(req.user);
-  res.send("Working")
+router.get("/",auth,  async (req, res) => {
+  res.send(req.user);
 });
 
 router.post("/signup", async (req, res) => {
@@ -41,17 +40,17 @@ router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   const { error } = validateSignin(req.body);
-  if (error) return res.send(error.details[0].message);
+  if (error) return res.json(error.details[0].message);
 
   const user = await User.findOne({ email: email });
-  if (!user) return res.status(404).send("Invalid credentials");
+  if (!user) return res.status(404).json("Invalid email or password");
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword)
-    return res.status(400).send("Invalid email or password!!!");
+    return res.status(400).json("Invalid email or password");
 
   const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
-  res.send(token);
+  res.json({token});
 });
 
 module.exports = router;

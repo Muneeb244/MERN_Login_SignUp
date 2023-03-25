@@ -18,8 +18,21 @@ import ErrorMessage from "../components/ErrorMessage";
 
 
 const sendToBackend = (values, {resetForm}) => {
-  console.log(values);
-  resetForm();
+  fetch("http://192.168.0.128:3000/auth/signin", {
+    method: "POST",
+    headers: {
+      "content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  })
+  .then(res => res.json())
+  .then((data) => {
+    if (data.token) {
+      resetForm();
+      return alert("Login successful");
+    } else return alert(data);
+  })
+  .catch((err) => console.log(err)); 
 }
 
 const signinSchema = yup.object({

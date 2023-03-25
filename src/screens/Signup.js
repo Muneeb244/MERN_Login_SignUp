@@ -17,37 +17,37 @@ import * as yup from "yup";
 import form from "../styles/form";
 import ErrorMessage from "../components/ErrorMessage";
 
-const sendToBackend = (values, { resetForm }) => {
-  if (values.password !== values.confirmPassword)
-    return alert("Passwords do not match");
-
-  fetch("http://192.168.0.128:3000/auth/signup", {
-    method: "POST",
-    headers: {
-      "content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.token) {
-        resetForm();
-        return alert("Account created successfully");
-      } else return alert(data);
-    })
-    .catch((err) => console.log("idr", err));
-};
-
-const signupSchema = yup.object({
-  name: yup.string().required().min(4).label("name"),
-  email: yup.string().required().email().label("email"),
-  password: yup.string().required().min(6).label("password"),
-  confirmPassword: yup.string().required().min(6).label("confirmPassword"),
-  address: yup.string().required().min(15).label("address"),
-});
 
 const Signup = ({ navigation }) => {
-  const [error, setError] = useState(null);
+  const sendToBackend = (values, { resetForm }) => {
+    if (values.password !== values.confirmPassword)
+      return alert("Passwords do not match");
+  
+    fetch("http://192.168.0.128:3000/auth/signup", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.token) {
+          resetForm();
+          alert("Account created successfully");
+          return navigation.navigate("Login");
+        } else return alert(data);
+      })
+      .catch((err) => console.log(err));
+  };
+  
+  const signupSchema = yup.object({
+    name: yup.string().required().min(4).label("name"),
+    email: yup.string().required().email().label("email"),
+    password: yup.string().required().min(6).label("password"),
+    confirmPassword: yup.string().required().min(6).label("confirmPassword"),
+    address: yup.string().required().min(15).label("address"),
+  });
 
   return (
     <Formik
