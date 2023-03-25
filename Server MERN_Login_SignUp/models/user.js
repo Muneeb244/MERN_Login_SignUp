@@ -44,6 +44,7 @@ const validateSignup = (user) => {
         name: joi.string().min(3).max(255).required(),
         email: joi.string().min(5).max(255).required().email(),
         password: joi.string().min(6).max(255).required(),
+        confirmPassword: joi.string().min(6).max(255).required(),
         address: joi.string().required(),
     })
     return Schema.validate(user);

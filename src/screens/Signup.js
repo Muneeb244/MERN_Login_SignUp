@@ -17,10 +17,25 @@ import * as yup from "yup";
 import form from "../styles/form";
 import ErrorMessage from "../components/ErrorMessage";
 
-const sendToBackend = (values, {resetForm}) => {
-  console.log(values);
-  if(values.password !== values.confirmPassword) return alert("Passwords do not match");
-  resetForm();
+const sendToBackend = (values, { resetForm }) => {
+  if (values.password !== values.confirmPassword)
+    return alert("Passwords do not match");
+
+  fetch("http://192.168.0.128:3000/auth/signup", {
+    method: "POST",
+    headers: {
+      "content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.token) {
+        resetForm();
+        return alert("Account created successfully");
+      } else return alert(data);
+    })
+    .catch((err) => console.log("idr", err));
 };
 
 const signupSchema = yup.object({
@@ -37,7 +52,13 @@ const Signup = ({ navigation }) => {
   return (
     <Formik
       validationSchema={signupSchema}
-      initialValues={{ name: "", email: "", password: "", confirmPassword: "", address: "" }}
+      initialValues={{
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        address: "",
+      }}
       onSubmit={sendToBackend}
     >
       {({

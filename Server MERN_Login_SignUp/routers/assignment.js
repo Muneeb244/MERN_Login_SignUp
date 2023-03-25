@@ -9,8 +9,9 @@ const bcrypt = require("bcrypt");
 //middleware
 const auth = require("../middlewares/AuthToken");
 
-router.get("/", auth, async (req, res) => {
-  res.send(req.user);
+router.get("/", async (req, res) => {
+  // res.send(req.user);
+  res.send("Working")
 });
 
 router.post("/signup", async (req, res) => {
@@ -18,7 +19,7 @@ router.post("/signup", async (req, res) => {
   if (error) return res.send(error.details[0].message);
 
   const duplicate = await User.findOne({ email: req.body.email });
-  if (duplicate) return res.send("user already exists");
+  if (duplicate) return res.status(400).json("user already exists");
 
   let user = new User({
     name: req.body.name,
@@ -31,7 +32,7 @@ router.post("/signup", async (req, res) => {
     .save()
     .then(() => {
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-      res.send(token);
+      res.json({token});
     })
     .catch((err) => res.send(err.message));
 });
