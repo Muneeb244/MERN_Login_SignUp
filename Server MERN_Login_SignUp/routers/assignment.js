@@ -36,7 +36,7 @@ async function mailer(email, code) {
 
 router.post("/verify", async (req, res) => {
   const { error } = validateSignup(req.body);
-  if (error) return res.status(422).send(error.details[0].message);
+  if (error) return res.status(422).json(error.details[0].message);
 
   const duplicate = await User.findOne({ email: req.body.email });
   if (duplicate) return res.status(400).json("user already exists");
@@ -57,11 +57,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-  const { error } = validateSignup(req.body);
-  if (error) return res.send(error.details[0].message);
-
-  const duplicate = await User.findOne({ email: req.body.email });
-  if (duplicate) return res.status(400).json("user already exists");
+  console.log(req.body);
 
   let user = new User({
     name: req.body.name,
@@ -76,7 +72,7 @@ router.post("/signup", async (req, res) => {
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
       res.json({ token });
     })
-    .catch((err) => res.send(err.message));
+    .catch((err) => res.json(err.message));
 });
 
 router.post("/signin", async (req, res) => {

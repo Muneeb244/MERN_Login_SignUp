@@ -24,5 +24,12 @@ module.exports = {
     },
     sideText: {
         color: '#F80053',
+    },
+    verify: {
+        borderColor: '#F80053',
+        borderWidth: 2,
+        color: '#000',
+        padding: 7,
+        borderRadius: 10,
     }
 }

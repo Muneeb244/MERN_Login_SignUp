@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import StartNavigation from './src/navigation/StartNavigation';
+import Verification from './src/screens/Verification';
 
 export default function App() {
   return (
