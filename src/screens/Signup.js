@@ -23,7 +23,7 @@ const Signup = ({ navigation }) => {
     if (values.password !== values.confirmPassword)
       return alert("Passwords do not match");
   
-    fetch("http://192.168.0.128:3000/auth/signup", {
+    fetch("http://192.168.0.128:3000/auth/verify", {
       method: "POST",
       headers: {
         "content-Type": "application/json",
@@ -32,10 +32,10 @@ const Signup = ({ navigation }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.token) {
-          resetForm();
-          alert("Account created successfully");
-          return navigation.navigate("Login");
+        if (data) {
+          // resetForm();
+          alert(data.message);
+          return navigation.navigate("Verification", { user: data.user });
         } else return alert(data);
       })
       .catch((err) => console.log(err));
@@ -176,7 +176,7 @@ const Signup = ({ navigation }) => {
                     <Text style={form.sideText}>Forgot password?</Text>
                   </View>
 
-                  <Buttons title="Login" height="20%" onPress={handleSubmit} />
+                  <Buttons title="Signup" height="20%" onPress={handleSubmit} />
                 </View>
               </View>
             </View>
