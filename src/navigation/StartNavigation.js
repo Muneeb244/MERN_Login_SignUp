@@ -6,6 +6,7 @@ import SignIn from '../screens/Signin';
 import Signup from '../screens/Signup';
 import Welcome from '../screens/Welcome';
 import Verification from '../screens/Verification';
+import Todo from '../screens/Todo';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const StartNavigation = () => {
         <Stack.Screen name="Login" component={SignIn} />
         <Stack.Screen name="SignUp" component={Signup} />
         <Stack.Screen name="Verification" component={Verification} />
+        <Stack.Screen name="Tasks" component={Todo} />
 
     </Stack.Navigator>
   )

@@ -45,7 +45,8 @@ router.post("/verify", async (req, res) => {
   try {
     const verificationCode = Math.floor(100000 + Math.random() * 900000);
     req.body.verificationCode = verificationCode;
-    await mailer(req.body.email, verificationCode);
+    // await mailer(req.body.email, verificationCode);
+    console.log(verificationCode);
     res.json({message: "Verification code sent to your email", user: req.body});
 
   } catch (error) {

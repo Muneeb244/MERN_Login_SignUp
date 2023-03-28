@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
+const { todoSchema } = require('./todo');
 
 const userScheme = new mongoose.Schema({
     name: {
@@ -29,7 +30,8 @@ const userScheme = new mongoose.Schema({
         required: true,
         minlength: 15,
         maxlength: 255
-    }
+    },
+    todos: [todoSchema]
 });
 
 userScheme.pre('save', async function(next) {

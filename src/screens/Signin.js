@@ -17,31 +17,33 @@ import * as yup from "yup";
 import ErrorMessage from "../components/ErrorMessage";
 
 
-const sendToBackend = (values, {resetForm}) => {
-  fetch("http://192.168.0.128:3000/auth/signin", {
-    method: "POST",
-    headers: {
-      "content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-  .then(res => res.json())
-  .then((data) => {
-    if (data.token) {
-      resetForm();
-      return alert("Login successful");
-    } else return alert(data);
-  })
-  .catch((err) => console.log(err)); 
-}
-
-const signinSchema = yup.object({
-  email: yup.string().required().email().label("email"),
-  password: yup.string().required().min(6).label("password"),
-});
 
 
 const Signin = ({ navigation }) => {
+
+  const sendToBackend = (values, {resetForm}) => {
+    fetch("http://192.168.0.128:3000/auth/signin", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.token) {
+        resetForm();
+        return navigation.navigate("Tasks", {token: data.token});
+      } else return alert(data);
+    })
+    .catch((err) => console.log(err)); 
+  }
+  
+  const signinSchema = yup.object({
+    email: yup.string().required().email().label("email"),
+    password: yup.string().required().min(6).label("password"),
+  });
+
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
