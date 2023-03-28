@@ -18,7 +18,7 @@ import ErrorMessage from "../components/ErrorMessage";
 
 const Verification = ({ navigation, route }) => {
 
-  const [error , setError] = useState(false)
+  const [error , setError] = useState(false);
 
   const sendToBackend = (values, { resetForm }) => {
     if (values.code == route.params?.user.verificationCode) {
@@ -39,7 +39,7 @@ const Verification = ({ navigation, route }) => {
           } else return alert(data);
         })
         .catch((err) => console.log(err));
-    } else setError(true)
+    } else alert("Invalid code")
   };
 
   const signinSchema = yup.object({
@@ -84,7 +84,7 @@ const Verification = ({ navigation, route }) => {
                   <View style={form.mainC}>
                     <TextInput
                       name="code"
-                      style={form.input}
+                      style={[form.input, {marginBottom: 10}]}
                       placeholder="Enter your code"
                       secureTextEntry
                       onChangeText={handleChange("code")}
@@ -92,23 +92,12 @@ const Verification = ({ navigation, route }) => {
                       onBlur={handleBlur("code")}
                     />
                     <ErrorMessage
-                      error={errors["code"] || "Invalid code"}
-                      visible={touched["code"] || error}
+                      error={errors["code"]}
+                      visible={touched["code"]}
                     />
-                    <View
-                      style={{
-                        width: "100%",
-                        padding: 10,
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      <Pressable onPress={() => console.log("reseding code")}>
-                        <Text style={form.verify}>Resend code</Text>
-                      </Pressable>
-                    </View>
                     <Buttons
                       title="Submit"
-                      height="22%"
+                      height="30%"
                       onPress={handleSubmit}
                     />
                   </View>
@@ -149,7 +138,7 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     backgroundColor: "#fff",
     width: "100%",
-    height: "45%",
+    height: "40%",
     alignItems: "center",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

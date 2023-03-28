@@ -20,7 +20,6 @@ import ErrorMessage from "../components/ErrorMessage";
 
 const Signup = ({ navigation }) => {
   const sendToBackend = (values, { resetForm }) => {
-    console.log("valuse in signnup", values);
     if (values.password !== values.confirmPassword)
       return alert("Passwords do not match");
   
@@ -33,7 +32,7 @@ const Signup = ({ navigation }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
+        if (data.message) {
           // resetForm();
           return navigation.navigate("Verification", { user: data.user });
         } else return alert(data);

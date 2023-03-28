@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 //middleware
 const auth = require("../middlewares/AuthToken");
 
+
 //Nodemailer function
 const nodemailer = require("nodemailer");
 
@@ -57,7 +58,6 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-  console.log(req.body);
 
   let user = new User({
     name: req.body.name,
