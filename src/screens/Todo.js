@@ -12,19 +12,23 @@ import form from "../styles/form";
 import ErrorMessage from "../components/ErrorMessage";
 import { MaterialIcons } from "@expo/vector-icons";
 import Task from "../components/Task";
+import CompleteTask from "../components/CompleteTask";
+import DeleteTask from "../components/DeleteTask";
 
-const info = [
-  { id: 1, task: "Social app", completed: true },
-  { id: 2, task: "Social app1", completed: false },
-  { id: 3, task: "Social app2", completed: true },
-];
+// const info = [
+//   { id: 1, task: "Social app", completed: true },
+//   { id: 2, task: "Social app1", completed: false },
+//   { id: 3, task: "Social app2", completed: true },
+// ];
 
 const Todo = ({ route }) => {
   const [input, setInput] = useState("");
   const [activeButton, setActiveButton] = useState(1);
-  const [data, setData] = useState([]);
+  const [complete, setComplete] = useState([]);
+  const [allT, setallT] = useState([]);
 
   const getTodo = () => {
+    console.log("I am called");
     fetch("http://192.168.0.128:3000/todo", {
       method: "POST",
       headers: {
@@ -34,12 +38,15 @@ const Todo = ({ route }) => {
     })
       .then((res) => res.json())
       .then((tData) => {
-        setData(tData);
+        setallT(tData);
+        setComplete(tData.filter((item) => item.completed));
+        // console.log(data, allT, complete, "here")
       })
       .catch((e) => console.log("Error", e));
   };
 
   const sendToBackend = () => {
+    if (!input) return alert("Please enter a task");
     fetch("http://192.168.0.128:3000/todo/add", {
       method: "POST",
       headers: {
@@ -49,27 +56,53 @@ const Todo = ({ route }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if(data) {
+        if (typeof data == "string") return alert(data);
+        if (data) {
           setData(data);
-          setInput("");
+          return alert("Task added successfully");
+          // setInput("");
         }
       })
       .catch((e) => console.log("Error", e));
   };
 
+  const completeTask = (task) => {
+    if (!task) return alert("Something went");
+
+    fetch("http://192.168.0.128:3000/todo/completed", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: route.params.token, todo: task }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data == "string") return alert(data);
+        getTodo();
+      });
+  };
+
+  const DeleteTask = (task) => {
+    console.log("here")
+    if (!task) return alert("Something went");
+    fetch("http://192.168.0.128:3000/todo/completed", {
+      method: "POST",
+      headers: {
+        "content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: route.params.token, todo: task }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data == "string") return alert(data);
+        getTodo();
+      });
+  };
+
   useEffect(() => {
-    getTodo();
+    if (allT.length == 0) getTodo();
   }, []);
-
-  const all = () => {
-    setActiveButton(1);
-    return getTodo();
-  };
-
-  const completed = () => {
-    setActiveButton(2);
-    return setData(data.filter((item) => item.completed));
-  };
 
   return (
     <View style={styles.screen}>
@@ -85,19 +118,27 @@ const Todo = ({ route }) => {
           size={45}
           color="#F80053"
           onPress={() => {
-            // data.push({ id: data.length + 1, task: input, completed: false });
-            // setData(data);
-            // console.log(data);
             sendToBackend();
           }}
         />
-        {/* <ErrorMessage error={} visible={false} /> */}
       </View>
       <View style={styles.listParent}>
         <FlatList
-          data={data}
+          data={activeButton == 1 ? allT : complete}
           renderItem={({ item }) => (
-            <Task task={item.todo} completed={item.completed} />
+            <Task
+              task={item.todo}
+              completed={item.completed}
+              renderRightActions={() => (
+                <CompleteTask
+                  onPress={() => completeTask(item.todo)}
+                  completed={item.completed}
+                />
+              )}
+              renderLeftActions={() => (
+                <DeleteTask onPress={() => DeleteTask(item.todo)} />
+              )}
+            />
           )}
           keyExtractor={(item) => item._id}
           style={styles.list}
@@ -109,7 +150,7 @@ const Todo = ({ route }) => {
             styles.footerbtn,
             { backgroundColor: activeButton == 1 ? "#F80053" : "#fff" },
           ]}
-          onPress={all}
+          onPress={() => setActiveButton(1)}
         >
           <Text
             style={[
@@ -125,7 +166,7 @@ const Todo = ({ route }) => {
             styles.footerbtn,
             { backgroundColor: activeButton == 2 ? "#F80053" : "#fff" },
           ]}
-          onPress={completed}
+          onPress={() => setActiveButton(2)}
         >
           <Text
             style={[
