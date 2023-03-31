@@ -26,9 +26,10 @@ const Todo = ({ route }) => {
   const [activeButton, setActiveButton] = useState(1);
   const [complete, setComplete] = useState([]);
   const [allT, setallT] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getTodo = () => {
-    console.log("I am called");
+    console.log("gettodo called");
     fetch("http://192.168.0.128:3000/todo", {
       method: "POST",
       headers: {
@@ -38,6 +39,7 @@ const Todo = ({ route }) => {
     })
       .then((res) => res.json())
       .then((tData) => {
+        if (typeof tData == "string") return alert(tData);
         setallT(tData);
         setComplete(tData.filter((item) => item.completed));
         // console.log(data, allT, complete, "here")
@@ -58,7 +60,8 @@ const Todo = ({ route }) => {
       .then((data) => {
         if (typeof data == "string") return alert(data);
         if (data) {
-          setData(data);
+          setallT(data);
+          setComplete(data.filter((item) => item.completed));
           return alert("Task added successfully");
           // setInput("");
         }
@@ -67,7 +70,9 @@ const Todo = ({ route }) => {
   };
 
   const completeTask = (task) => {
-    if (!task) return alert("Something went");
+    if (!task) return alert("Something went wrong");
+
+    setRefreshing(true);
 
     fetch("http://192.168.0.128:3000/todo/completed", {
       method: "POST",
@@ -80,13 +85,16 @@ const Todo = ({ route }) => {
       .then((data) => {
         if (typeof data == "string") return alert(data);
         getTodo();
-      });
+      })
+      .catch((e) => console.log(e));
+    setRefreshing(false);
   };
 
-  const DeleteTask = (task) => {
-    console.log("here")
-    if (!task) return alert("Something went");
-    fetch("http://192.168.0.128:3000/todo/completed", {
+
+  const deleteTask = (task) => {
+    setRefreshing(true);
+    if (!task) return alert("Something went wrong");
+    fetch("http://192.168.0.128:3000/todo/delete", {
       method: "POST",
       headers: {
         "content-Type": "application/json",
@@ -97,8 +105,11 @@ const Todo = ({ route }) => {
       .then((data) => {
         if (typeof data == "string") return alert(data);
         getTodo();
-      });
+      })
+      .catch((e) => console.log(e));
+    setRefreshing(false);
   };
+
 
   useEffect(() => {
     if (allT.length == 0) getTodo();
@@ -118,31 +129,39 @@ const Todo = ({ route }) => {
           size={45}
           color="#F80053"
           onPress={() => {
+            console.log("pressed")
             sendToBackend();
           }}
         />
       </View>
       <View style={styles.listParent}>
-        <FlatList
-          data={activeButton == 1 ? allT : complete}
-          renderItem={({ item }) => (
-            <Task
-              task={item.todo}
-              completed={item.completed}
-              renderRightActions={() => (
-                <CompleteTask
-                  onPress={() => completeTask(item.todo)}
-                  completed={item.completed}
-                />
-              )}
-              renderLeftActions={() => (
-                <DeleteTask onPress={() => DeleteTask(item.todo)} />
-              )}
-            />
-          )}
-          keyExtractor={(item) => item._id}
-          style={styles.list}
-        />
+        {allT.length == 0 && (
+          <Text style={{ color: "#fff" }}>No Todos available to show</Text>
+        )}
+        {allT.length > 0 && (
+          <FlatList
+            data={activeButton == 1 ? allT : complete}
+            renderItem={({ item }) => (
+              <Task
+                task={item.todo}
+                completed={item.completed}
+                renderRightActions={() => (
+                  <CompleteTask
+                    onPress={() => completeTask(item.todo)}
+                    completed={item.completed}
+                  />
+                )}
+                renderLeftActions={() => (
+                  <DeleteTask onPress={() => deleteTask(item.todo)} />
+                )}
+              />
+            )}
+            keyExtractor={(item) => item._id}
+            style={styles.list}
+            refreshing={refreshing}
+            onRefresh={() => getTodo()}
+          />
+        )}
       </View>
       <View style={styles.footer}>
         <Pressable
@@ -202,7 +221,6 @@ const styles = StyleSheet.create({
   },
   listParent: {
     width: "100%",
-    // backgroundColor: "blue",
     height: "75%",
     justifyContent: "center",
     alignItems: "center",

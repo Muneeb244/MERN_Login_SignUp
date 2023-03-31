@@ -14,7 +14,7 @@ const Task = ({ task, completed, renderRightActions, renderLeftActions }) => {
             styles.container,
             {
               backgroundColor:
-                "#" + Math.floor(Math.random() * 16777215).toString(16),
+                '#F80053',
             },
           ]}
         >

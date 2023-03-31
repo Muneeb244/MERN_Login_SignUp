@@ -16,12 +16,8 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import ErrorMessage from "../components/ErrorMessage";
 
-
-
-
 const Signin = ({ navigation }) => {
-
-  const sendToBackend = (values, {resetForm}) => {
+  const sendToBackend = (values, { resetForm }) => {
     fetch("http://192.168.0.128:3000/auth/signin", {
       method: "POST",
       headers: {
@@ -29,16 +25,16 @@ const Signin = ({ navigation }) => {
       },
       body: JSON.stringify(values),
     })
-    .then(res => res.json())
-    .then((data) => {
-      if (data.token) {
-        resetForm();
-        return navigation.navigate("Tasks", {token: data.token});
-      } else return alert(data);
-    })
-    .catch((err) => console.log(err)); 
-  }
-  
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.token) {
+          resetForm();
+          return navigation.navigate("Tasks", { token: data.token });
+        } else return alert(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const signinSchema = yup.object({
     email: yup.string().required().email().label("email"),
     password: yup.string().required().min(6).label("password"),
@@ -71,14 +67,17 @@ const Signin = ({ navigation }) => {
                       Email
                     </Text>
                     <TextInput
-                    name="email"
+                      name="email"
                       style={form.input}
                       placeholder="email"
                       onChangeText={handleChange("email")}
                       value={values.email}
                       onBlur={handleBlur("email")}
                     />
-                    <ErrorMessage error={errors["email"]} visible={touched["email"]} />
+                    <ErrorMessage
+                      error={errors["email"]}
+                      visible={touched["email"]}
+                    />
                   </View>
 
                   <View style={form.mainC}>
@@ -86,7 +85,7 @@ const Signin = ({ navigation }) => {
                       Password
                     </Text>
                     <TextInput
-                    name="password"
+                      name="password"
                       style={form.input}
                       placeholder="Password"
                       secureTextEntry
@@ -94,7 +93,10 @@ const Signin = ({ navigation }) => {
                       value={values.password}
                       onBlur={handleBlur("password")}
                     />
-                    <ErrorMessage error={errors["password"]} visible={touched["password"]} />
+                    <ErrorMessage
+                      error={errors["password"]}
+                      visible={touched["password"]}
+                    />
                     <View
                       style={{
                         width: "100%",
